@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<previews>
+
+    <preview
+        name="Nexus 7"
+        activity="ca.sulli.eriel.ErielLauncher"
+        config="layout-ldltr-sw384dp-w384dp-h640dp-normal-notlong-port-notnight-xhdpi-finger-keyssoft-nokeys-navhidden-nonav-1280x768-v8"
+        device="Nexus 4"
+        devicestate="Portrait"
+        target="Android 2.2"
+        theme="@style/AppTheme" >
+    </preview>
+
+</previews>

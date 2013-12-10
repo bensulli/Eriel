@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='us-ascii'?> 
+<book
+	title="Eriel"
+	author="Sulli"
+	>
+		<page
+			id="1"
+			content="Blahblahblah"
+			choice1="Choice #1"
+			choice2="Choice #2"
+			choice3="Choice #3"
+			choice1Result="2"
+			choice2Result="3"
+			choice3Result="4"
+		>
+		</page>
+		<page
+			id="2"
+			content="Blahblahblah"
+			choice1="Choice #1"
+			choice2="Choice #2"
+			choice3="Choice #3"
+			choice1Result="5"
+			choice2Result="6"
+			choice3Result="7"
+		>
+		</page>
+</book>
