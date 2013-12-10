@@ -25,7 +25,48 @@
 		android:text="content!"
 		android:textAppearance="?android:attr/textAppearanceMedium"
 		android:layout_width="match_parent"
-		android:layout_below="@id/pageNumTxt"/>
+		android:layout_below="@id/pageNumTxt"
+		android:layout_marginLeft="15dp"
+		android:layout_marginRight="15dp"/>
+
+	<RelativeLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:layout_alignParentBottom="true">
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:text="Health:"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:layout_width="wrap_content"
+			android:id="@+id/healthLabelTxt"/>
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:text="Mana  :"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:layout_width="wrap_content"
+			android:layout_below="@id/healthLabelTxt"
+			android:id="@+id/manaLabelTxt"/>
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:text="Dead"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:layout_width="wrap_content"
+			android:layout_toRightOf="@id/healthLabelTxt"
+			android:id="@+id/healthTxt"/>
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:text="Manaless"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:layout_width="wrap_content"
+			android:id="@+id/manaTxt"
+			android:layout_alignBottom="@id/manaLabelTxt"
+			android:layout_toRightOf="@id/manaLabelTxt"/>
+
+	</RelativeLayout>
 
 </RelativeLayout>
 
