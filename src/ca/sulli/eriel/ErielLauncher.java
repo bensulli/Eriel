@@ -3,6 +3,8 @@ package ca.sulli.eriel;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
+import android.view.Window;
+import android.view.WindowManager;
 
 public class ErielLauncher extends Activity {
 
@@ -10,6 +12,10 @@ public class ErielLauncher extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eriel_launcher);
+
+        /* CUSTOM LAYOUT SETUP */
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE); //Remove title bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //Remove notification bar
     }
 
 
