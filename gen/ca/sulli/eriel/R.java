@@ -24,22 +24,26 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int adventure=0x7f020000;
+        public static final int ic_launcher=0x7f020001;
+        public static final int icon=0x7f020002;
     }
     public static final class id {
-        public static final int action_settings=0x7f09000c;
+        public static final int action_settings=0x7f09000e;
+        public static final int cashLabelTxt=0x7f09000c;
+        public static final int cashTxt=0x7f09000d;
         public static final int choice1Btn=0x7f090006;
         public static final int choice2Btn=0x7f090007;
         public static final int choice3Btn=0x7f090008;
-        public static final int contentRelativeLayout=0x7f090004;
+        public static final int contentRelativeLayout=0x7f090003;
         public static final int contentTxt=0x7f090005;
-        public static final int dividerLayout=0x7f090009;
+        public static final int dividerLayout=0x7f090002;
         public static final int healthBar=0x7f09000b;
+        public static final int healthBarLay=0x7f090009;
         public static final int healthLabelTxt=0x7f09000a;
         public static final int masterRelativeLayout=0x7f090000;
-        public static final int pageNumTxt=0x7f090001;
-        public static final int playerBarLay=0x7f090003;
-        public static final int scrollView1=0x7f090002;
+        public static final int pageImage=0x7f090004;
+        public static final int scrollView1=0x7f090001;
     }
     public static final class layout {
         public static final int activity_eriel_launcher=0x7f030000;

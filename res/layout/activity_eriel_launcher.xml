@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/masterRelativeLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="@color/bg_offwhite"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -12,40 +12,45 @@
     tools:context=".ErielLauncher"
     tools:ignore="HardcodedText" >
 
-    <TextView
-        android:id="@+id/pageNumTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="1"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@id/dividerLayout"
-        android:layout_below="@id/pageNumTxt"
-        android:layout_marginBottom="20dp" >
+        android:layout_above="@+id/dividerLayout"
+        android:layout_marginBottom="15dp"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbarStyle="outsideOverlay" >
 
         <RelativeLayout
             android:id="@+id/contentRelativeLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/pageImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="15dp"
+                android:contentDescription="An Adventurer"
+                android:scaleType="centerCrop"
+                android:src="@drawable/adventure" />
 
             <TextView
                 android:id="@+id/contentTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginBottom="50dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="15dp"
+                android:layout_alignParentTop="false"
+                android:layout_below="@id/pageImage"
+                android:layout_marginBottom="25dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:text="Your footsteps crunch on the dried leaves that blanket the forest floor. A gust briefly whips the leaves into the air, obscuring your vision. As they settle, you see the trees thin ahead.\n\nYou enter the clearing, clutching your small knife firmly in your hand. The blood running from the wound in your shoulder threatens to loose your grip, but you&apos;re confident that your resolve is enough to deliver a lethal blow regardless.\n\nYet you hesitate. Are you truly ready for what awaits you in the foreign ruins that lie before you?"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#000000"
                 tools:ignore="HardcodedText" />
 
             <Button
@@ -58,7 +63,8 @@
                 android:layout_below="@id/contentTxt"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical|center_horizontal|left"
-                android:text="Yes, I&apos;m ready." />
+                android:text="Yes, I&apos;m ready."
+                android:textColor="#000000" />
 
             <Button
                 android:id="@+id/choice2Btn"
@@ -70,7 +76,8 @@
                 android:layout_below="@id/choice1Btn"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical|center_horizontal|left"
-                android:text="No, I was too afraid to go on. Let some other bastard die in a spike pit trap." />
+                android:text="No, I was too afraid to go on. Let some other bastard die in a spike pit trap."
+                android:textColor="#000000" />
 
             <Button
                 android:id="@+id/choice3Btn"
@@ -83,7 +90,8 @@
                 android:layout_alignRight="@+id/contentTxt"
                 android:layout_below="@id/choice2Btn"
                 android:gravity="center_vertical|center_horizontal|left"
-                android:text="I should probably check my supplies once more to be sure I&apos;m ready." />
+                android:text="I should probably check my supplies once more to be sure I&apos;m ready."
+                android:textColor="#000000" />
 
         </RelativeLayout>
     </ScrollView>
@@ -92,7 +100,7 @@
         android:id="@+id/dividerLayout"
         android:layout_width="fill_parent"
         android:layout_height="5dp"
-        android:layout_above="@id/healthBarLay"
+        android:layout_above="@+id/healthBarLay"
         android:layout_alignParentLeft="false"
         android:layout_alignParentRight="false"
         android:layout_marginBottom="10dp"
@@ -102,17 +110,20 @@
 
     <RelativeLayout
         android:id="@+id/healthBarLay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
         android:layout_alignParentBottom="true"
         android:background="#000000"
+        android:gravity="center_vertical"
         android:paddingLeft="5dp" >
 
         <TextView
             android:id="@+id/healthLabelTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Health"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:text="HP"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#FFFFFF" />
 
@@ -120,15 +131,53 @@
             android:id="@+id/healthBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="250dp"
-            android:layout_height="10dp"
-            android:layout_alignBottom="@id/healthLabelTxt"
-            android:layout_alignParentTop="false"
-            android:layout_marginBottom="5dp"
+            android:layout_height="15dp"
+            android:layout_alignParentRight="false"
+            android:layout_centerHorizontal="false"
+            android:layout_centerInParent="false"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="6dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_toRightOf="@+id/healthLabelTxt"
             android:max="100"
             android:progress="100" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="75dp"
+        android:layout_height="30dp"
+        android:layout_alignTop="@id/healthBarLay"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@id/healthBarLay"
+        android:background="#000000"
+        android:gravity="center_vertical" >
+
+        <TextView
+            android:id="@+id/cashLabelTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="false"
+            android:layout_centerInParent="false"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:text="$"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/cashTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="false"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/cashLabelTxt"
+            android:text="999"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#FFFFFF" />
+
     </RelativeLayout>
 
 </RelativeLayout>
