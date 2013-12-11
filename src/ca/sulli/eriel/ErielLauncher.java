@@ -34,7 +34,7 @@ public class ErielLauncher extends Activity {
 	public int hp;
 		
 	/* BOOK TO USE */
-	public File book; 
+	public static String book = "content.xml"; 
 	
 	
     @Override
@@ -46,13 +46,7 @@ public class ErielLauncher extends Activity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //Remove notification bar
 
         setContentView(R.layout.activity_eriel_launcher);
-        
-        AssetManager assetManager = getAssets();
-        
-        book = assetManager.open("content.xml")
-        boolean test = book.exists();
-        String test2 = book.getAbsolutePath();
-        String test3 = book.getPath();
+
 
         
         /* ASSIGN LAYOUT OBJECTS */
@@ -66,16 +60,7 @@ public class ErielLauncher extends Activity {
         cash = (TextView)findViewById(R.id.cashTxt);
         
         /* READ XML */
-        XMLParser parser = new XMLParser();
-        
-        String xml = null; // NOT SAFE! FIX THIS LATER!
-		try {
-			xml = FileUtils.readFileToString(book,Charset.defaultCharset());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        
-        Document doc = parser.getDomElement(xml);
+
         
         
     }
