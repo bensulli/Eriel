@@ -105,15 +105,60 @@ public class ErielLauncher extends Activity {
     			pages = new ArrayList();
     		case XmlPullParser.START_TAG:
     			name = parser.getName();
-    			if (name == "page"){
+    			if (name == "page")
+    			{
     				currentPage = new Page();
     				//AND THEN PARSE VALUES OF THIS CURRENTPAGE INTO PAGE OBJECT
+    			} else if (currentPage != null)
+    				{
+    					if(name == "id")
+    					{
+    						currentPage.id = Integer.parseInt(parser.nextText());
+    					}
+    					else if(name == "content")
+    					{
+    						currentPage.content = parser.nextText();
+    					}
+    					else if(name == "choice1")
+    					{
+    						currentPage.choice1 = parser.nextText();
+    					}
+    					else if(name == "choice2")
+    					{
+    						currentPage.choice2 = parser.nextText();
+    					}
+    					else if(name == "choice3")
+    					{
+    						currentPage.choice3 = parser.nextText();
+    					}
+    					else if(name == "choice1Result")
+    					{
+    						currentPage.choice1Result = Integer.parseInt(parser.nextText());
+    					}
+    					else if(name == "choice2Result")
+    					{
+    						currentPage.choice2Result = Integer.parseInt(parser.nextText());
+    					}
+    					else if(name == "choice3Result")
+    					{
+    						currentPage.choice3Result = Integer.parseInt(parser.nextText());
+    					}
+    					else if(name == "image")
+    					{
+    						currentPage.image = parser.nextText();
+    					}
+    						
+    				}
+    				break;
+    		case XmlPullParser.END_TAG:
+    			name = parser.getName();
+    			if (name.equalsIgnoreCase("page") && currentPage != null)
+    				pages.add(currentPage);
+    			
     			}
     			
     		}
-    		
+    		eventType = parser.next();
     	}
-    }
-    
     
 }
