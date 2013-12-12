@@ -38,7 +38,10 @@ public class ErielLauncher extends Activity {
 	/* BOOK TO USE */
 	public static String book = "content.xml"; 
 	
-	public static int readLimit = 5000;
+	/* ARRAY OF PAGES */
+	public ArrayList<Page> pages = null;
+	
+	public static int readLimit = 5000; // Used to kill a loop if it clearly isn't advancing
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +77,7 @@ public class ErielLauncher extends Activity {
         
         Context context = getApplicationContext();
      
-        Log.d("debug", "Starting inputstream");
+        Log.e("debug", "Starting inputstream");
 		
 		InputStream in_s;
 		
@@ -102,7 +105,7 @@ public class ErielLauncher extends Activity {
 			e1.printStackTrace();
 		}
         
-        Log.d("debug", "Beginning XML parse");
+        Log.e("debug", "Beginning XML parse");
         
         try {
 			parseXML(parser);
@@ -113,13 +116,17 @@ public class ErielLauncher extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        
+        // ACTUALLY START THE THING!
+        
+        
 
                 
     }
 
     private void parseXML(XmlPullParser parser) throws XmlPullParserException,IOException
     {
-    	ArrayList<Page> pages = null;
+    	
     		int eventType = parser.getEventType();
     		Page currentPage = null;
     		
@@ -130,20 +137,33 @@ public class ErielLauncher extends Activity {
     		String name = null;
     		i++;
     		
-    		Log.d("debug", "EventType is " + eventType);
+    		Log.e("debug", "EventType is " + eventType);
     		switch (eventType)
     		{
     		case XmlPullParser.START_DOCUMENT:
     			pages = new ArrayList();
     		case XmlPullParser.START_TAG:
     			name = parser.getName();
-    			Log.d("debug", "Attrib Name is " + name);
+    			while(name == null)
+    			{
+    				parser.next();
+    				name = parser.getName();
+    			}
+
+    			    			
+    			String pageString = "page";
     			
-    			if (name == "page")
+    			if(name.equals(pageString))
     			{
     				currentPage = new Page();
     				//AND THEN PARSE VALUES OF THIS CURRENTPAGE INTO PAGE OBJECT
-    			} else if (currentPage != null)
+    			} else if (name != pageString)
+    			{
+        			//if(name != null)
+           			//Log.e(name, name.);
+    			}
+    			
+    			else if (currentPage != null)
     				{
     					if(name == "id")
     					{
@@ -188,11 +208,11 @@ public class ErielLauncher extends Activity {
     			name = parser.getName();
     			if (name.equalsIgnoreCase("page") && currentPage != null)
     				pages.add(currentPage);
-    			
+    		
     			}
-    			
-    		}
     		eventType = parser.next();
+    		}
+    		
     	}
     
     @Override
