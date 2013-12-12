@@ -1,19 +1,18 @@
 package ca.sulli.eriel;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 
-import org.w3c.dom.Document;
+import org.apache.commons.io.IOUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
-import android.R.bool;
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.res.AssetManager;
+import android.content.Context;
+import android.util.Log;
 import android.util.Xml;
 import android.view.Menu;
 import android.view.Window;
@@ -21,8 +20,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import org.apache.commons.io.FileUtils;
 
 public class ErielLauncher extends Activity {
 
@@ -36,11 +33,12 @@ public class ErielLauncher extends Activity {
 	
 	/* INST GAME OBJECTS */
 	public TextView cash;
-	public int hp;
+	public int hp; 
 		
 	/* BOOK TO USE */
 	public static String book = "content.xml"; 
 	
+	public static int readLimit = 5000;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,46 +63,82 @@ public class ErielLauncher extends Activity {
         cash = (TextView)findViewById(R.id.cashTxt);
         
         /* READ XML BOOK */
-        XmlPullParser parser = Xml.newPullParser();
-        
-        InputStream in_s;
+        XmlPullParser parser;
 		try {
-			
-		in_s = getApplicationContext().getAssets().open(book);
-        parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-        parser.setInput(in_s, null);
-		parseXML(parser);
+			parser = XmlPullParserFactory.newInstance().newPullParser();
+		} catch (XmlPullParserException e3) {
+			// TODO Auto-generated catch block
+			e3.printStackTrace();
+			parser = null;
+		}
+        
+        Context context = getApplicationContext();
+     
+        Log.d("debug", "Starting inputstream");
 		
-		} catch (Exception e1) { // Don't judge me :p
+		InputStream in_s;
+		
+		try {
+			in_s = getApplicationContext().getAssets().open(book);
+		} catch (IOException e2) {
+			in_s = null;
+			e2.printStackTrace();
+		}
+
+		/* Only used to confirm that the XML was actually readable by the inputstreamer
+		try {
+			String stringXML = IOUtils.toString(in_s, "UTF-8");
+			Log.e(stringXML, stringXML);
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		*/
+        
+        try {
+        	parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+        	parser.setInput(in_s, null);
+		} catch (XmlPullParserException e1) {
 			e1.printStackTrace();
+		}
+        
+        Log.d("debug", "Beginning XML parse");
+        
+        try {
+			parseXML(parser);
+		} catch (XmlPullParserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
                 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.eriel_launcher, menu);
-        return true;
-    }
-    
     private void parseXML(XmlPullParser parser) throws XmlPullParserException,IOException
     {
     	ArrayList<Page> pages = null;
     		int eventType = parser.getEventType();
     		Page currentPage = null;
     		
-    	while (eventType != XmlPullParser.END_DOCUMENT)
+    		int i = 0; // Need this to kill the loop if something goes wrong
+    		
+    	while (eventType != XmlPullParser.END_DOCUMENT && i < readLimit) // End loop at end of file or if readLimit reached (eg, no events found)
     	{
     		String name = null;
+    		i++;
     		
+    		Log.d("debug", "EventType is " + eventType);
     		switch (eventType)
     		{
     		case XmlPullParser.START_DOCUMENT:
     			pages = new ArrayList();
     		case XmlPullParser.START_TAG:
     			name = parser.getName();
+    			Log.d("debug", "Attrib Name is " + name);
+    			
     			if (name == "page")
     			{
     				currentPage = new Page();
@@ -150,7 +184,7 @@ public class ErielLauncher extends Activity {
     						
     				}
     				break;
-    		case XmlPullParser.END_TAG:
+    		case XmlPullParser.END_TAG: // If end of file, add current page to list of pages
     			name = parser.getName();
     			if (name.equalsIgnoreCase("page") && currentPage != null)
     				pages.add(currentPage);
@@ -160,5 +194,12 @@ public class ErielLauncher extends Activity {
     		}
     		eventType = parser.next();
     	}
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.eriel_launcher, menu);
+        return true;
+    }
     
 }
