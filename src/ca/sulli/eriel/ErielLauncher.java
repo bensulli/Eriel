@@ -19,6 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class ErielLauncher extends Activity {
@@ -30,10 +31,12 @@ public class ErielLauncher extends Activity {
 	public Button choice1;
 	public Button choice2;
 	public Button choice3;
+	public ProgressBar hpBar;
 	
 	/* INST GAME OBJECTS */
-	public TextView cash;
+	public TextView cashText;
 	public int hp; 
+	public int cash;
 		
 	/* BOOK TO USE */
 	public static String book = "content.xml"; 
@@ -61,9 +64,15 @@ public class ErielLauncher extends Activity {
         choice1 = (Button)findViewById(R.id.choice1Btn);
         choice2 = (Button)findViewById(R.id.choice2Btn);
         choice3 = (Button)findViewById(R.id.choice3Btn);
+        hpBar = (ProgressBar)findViewById(R.id.healthBar);
         
         /* LINK GAME OBJECTS */
-        cash = (TextView)findViewById(R.id.cashTxt);
+        cashText = (TextView)findViewById(R.id.cashTxt);
+        hp = 80;
+        cash = 10;
+        cashText.setText(Integer.toString(cash));
+        hpBar.setProgress(hp);
+        hpBar.bringToFront();
         
         /* READ XML BOOK */
         XmlPullParser parser;

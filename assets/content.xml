@@ -21,6 +21,7 @@
     <choice1>Die.</choice1>
     <content>You enter the ruins... and die.</content>
     <id>2</id>
+    <hp>-100</hp>
   </page>
   <page>
     <image>adventure</image>
@@ -34,7 +35,7 @@
     <id>3</id>
   </page>
   <page>
-    <image>adventureWhat happens when I do this?</image>
+    <image>adventure</image>
     <choice3Result>13</choice3Result>
     <choice2Result>12</choice2Result>
     <choice1Result>2</choice1Result>
@@ -43,5 +44,6 @@
     <choice1>I must have been imagining it... Enter the ruins anyway.</choice1>
     <content>You kneel and remove your backpack from your tired shoulders. Your posessions are few, but you take several minutes to look them over, taking advantage of the reprieve. Suddenly, you see movement. Did something just dash from the ruins and head East?</content>
     <id>4</id>
+    <cash>100</cash>
   </page>
 </book>

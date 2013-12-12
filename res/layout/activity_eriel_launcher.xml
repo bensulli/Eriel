@@ -30,13 +30,14 @@
             <ImageView
                 android:id="@+id/pageImage"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_height="250dp"
+                android:layout_alignParentLeft="false"
                 android:layout_alignParentTop="true"
-                android:layout_marginBottom="15dp"
-                android:contentDescription="An Adventurer"
-                android:scaleType="centerCrop"
-                android:src="@drawable/adventure" />
+                android:layout_centerHorizontal="true"
+                android:clickable="false"
+                android:contentDescription="Page Image"
+                android:scaleType="centerInside"
+                android:src="@drawable/const" />
 
             <TextView
                 android:id="@+id/contentTxt"
@@ -48,7 +49,7 @@
                 android:layout_marginBottom="25dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:text="Your footsteps crunch on the dried leaves that blanket the forest floor. A gust briefly whips the leaves into the air, obscuring your vision. As they settle, you see the trees thin ahead.\n\nYou enter the clearing, clutching your small knife firmly in your hand. The blood running from the wound in your shoulder threatens to loose your grip, but you&apos;re confident that your resolve is enough to deliver a lethal blow regardless.\n\nYet you hesitate. Are you truly ready for what awaits you in the foreign ruins that lie before you?"
+                android:text="Content goes here!"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#000000"
                 tools:ignore="HardcodedText" />
@@ -63,7 +64,7 @@
                 android:layout_below="@id/contentTxt"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical|center_horizontal|left"
-                android:text="Yes, I&apos;m ready."
+                android:text="Choice 1"
                 android:textColor="#000000" />
 
             <Button
@@ -76,7 +77,7 @@
                 android:layout_below="@id/choice1Btn"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical|center_horizontal|left"
-                android:text="No, I was too afraid to go on. Let some other bastard die in a spike pit trap."
+                android:text="Choice 2"
                 android:textColor="#000000" />
 
             <Button
@@ -90,7 +91,7 @@
                 android:layout_alignRight="@+id/contentTxt"
                 android:layout_below="@id/choice2Btn"
                 android:gravity="center_vertical|center_horizontal|left"
-                android:text="I should probably check my supplies once more to be sure I&apos;m ready."
+                android:text="Choice 3"
                 android:textColor="#000000" />
 
         </RelativeLayout>
@@ -130,7 +131,7 @@
         <ProgressBar
             android:id="@+id/healthBar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="250dp"
+            android:layout_width="200dp"
             android:layout_height="15dp"
             android:layout_alignParentRight="false"
             android:layout_centerHorizontal="false"
@@ -142,6 +143,21 @@
             android:layout_toRightOf="@+id/healthLabelTxt"
             android:max="100"
             android:progress="100" />
+
+        <FrameLayout
+            android:layout_width="210dp"
+            android:layout_height="15dp"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentTop="false"
+            android:layout_centerHorizontal="false"
+            android:layout_centerInParent="false"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/healthLabelTxt"
+            android:background="#FFFFFF"
+            android:fadingEdge="horizontal|vertical" >
+
+        </FrameLayout>
 
     </RelativeLayout>
 
