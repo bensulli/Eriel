@@ -63,6 +63,7 @@
                 android:layout_below="@id/contentTxt"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical|center_horizontal|left"
+                android:onClick="Choose"
                 android:text="Choice 1"
                 android:textColor="#000000" />
 
@@ -76,6 +77,7 @@
                 android:layout_below="@id/choice1Btn"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical|center_horizontal|left"
+                android:onClick="Choose"
                 android:text="Choice 2"
                 android:textColor="#000000" />
 
@@ -90,6 +92,7 @@
                 android:layout_alignRight="@+id/contentTxt"
                 android:layout_below="@id/choice2Btn"
                 android:gravity="center_vertical|center_horizontal|left"
+                android:onClick="Choose"
                 android:text="Choice 3"
                 android:textColor="#000000" />
 

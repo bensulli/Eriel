@@ -15,6 +15,7 @@ import android.content.Context;
 import android.util.Log;
 import android.util.Xml;
 import android.view.Menu;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -77,7 +78,7 @@ public class ErielLauncher extends Activity {
         
     }
 
-    private void updatePage(Page onPage) {
+    private void updatePage(Page onPage) { 
 		Log.e(null,"Updating layout...");
     	content.setText(onPage.content);
 		choice1.setText(onPage.choice1);
@@ -91,6 +92,24 @@ public class ErielLauncher extends Activity {
 		
 	}
 
+    public void Choose(View v)
+    {	
+    	switch(v.getId()) {
+    	case (R.id.choice1Btn):
+    		onPage = pages.get(onPage.choice1Result);
+    		updatePage(onPage);
+    		break;
+    	case (R.id.choice2Btn):
+    		onPage = pages.get(onPage.choice2Result);
+    		updatePage(onPage);	
+    		break;
+    	case (R.id.choice3Btn):	
+    		onPage = pages.get(onPage.choice1Result);
+    		updatePage(onPage);
+    		break;
+    	}
+    }
+    
 	private void Initialize() {
         /* LINK LAYOUT OBJECTS */
         pageImage = (ImageView)findViewById(R.id.pageImage);
