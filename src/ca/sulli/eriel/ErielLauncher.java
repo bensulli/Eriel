@@ -90,7 +90,16 @@ public class ErielLauncher extends Activity {
 			cashText.setText(Integer.toString(cash));
 			
 	    	Log.e(null,"Updating layout...");
-	    	content.setText(onPage.content);
+	    	String contentString = onPage.content;
+	    	
+	    	/*
+	    	if(contentString.contains("\\n"))
+	    	{
+	    		contentString.replace("\\n", System.getProperty("line.separator"));
+	    	}
+	    	*/
+	    	
+	    	content.setText(contentString);
 			choice1.setText(onPage.choice1);
 			choice2.setText(onPage.choice2);
 			choice2.setVisibility(View.VISIBLE);
