@@ -83,32 +83,33 @@ public class ErielLauncher extends Activity {
 
     private void updatePage(Page onPage) { 
 		hp = hp + onPage.hp; // This is "+" because damage is expressed as a negative number in the XML
-    	
-    	Log.e(null,"Updating layout...");
-    	content.setText(onPage.content);
-		choice1.setText(onPage.choice1);
-		choice2.setText(onPage.choice2);
-		choice2.setVisibility(View.VISIBLE);
-		
-		if (onPage.choice3 == "")
-		{
-			choice3.setVisibility(View.GONE);
-		}
-		else
-		{
-			choice3.setVisibility(View.VISIBLE);
-			choice3.setText(onPage.choice3);
-		}
-		
-		Log.e(null,"Image name is: " + onPage.image);
-		
-		String newImage = onPage.image;
-		int resID = getResources().getIdentifier(newImage, "drawable", getPackageName());
-		pageImage.setImageResource(resID);
-		
 		if (hp > 0)
 		{
 			hpBar.setProgress(hp);
+			cash = cash + onPage.cash;
+			cashText.setText(Integer.toString(cash));
+			
+	    	Log.e(null,"Updating layout...");
+	    	content.setText(onPage.content);
+			choice1.setText(onPage.choice1);
+			choice2.setText(onPage.choice2);
+			choice2.setVisibility(View.VISIBLE);
+			
+			if (onPage.choice3 == null)
+			{
+				choice3.setVisibility(View.GONE);
+			}
+			else
+			{
+				choice3.setVisibility(View.VISIBLE);
+				choice3.setText(onPage.choice3);
+			}
+			
+			Log.e(null,"Image name is: " + onPage.image);
+			
+			String newImage = onPage.image;
+			int resID = getResources().getIdentifier(newImage, "drawable", getPackageName());
+			pageImage.setImageResource(resID);
 		}
 		else if (hp <= 0)
 		{
@@ -126,6 +127,8 @@ public class ErielLauncher extends Activity {
 		pageImage.setImageResource(resID);
 		
 		alive = false;
+		
+    	content.setText(onPage.deathMessage);
 		
 		choice1.setText("Start over!");		
 		choice2.setVisibility(View.GONE);
@@ -302,7 +305,10 @@ public class ErielLauncher extends Activity {
     					{
     						currentPage.cash = Integer.parseInt(parser.nextText());
     					}
-    					//TODO: Implement health and cash modifiers
+    					else if(name.equals("deathMessage"))
+    					{
+    						currentPage.deathMessage = parser.nextText();
+    					}
     						
     				}
     				break;

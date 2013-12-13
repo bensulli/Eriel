@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <book>
   <page>
+    <id>1</id>
+    <content>Your footsteps crunch on the dried leaves that blanket the forest floor. A gust briefly whips the leaves into the air, obscuring your vision. As they settle, you see the trees thin ahead.\n\nYou enter the clearing, clutching your small knife firmly in your hand. The blood running from the wound in your shoulder threatens to loose your grip, but you're confident that your resolve is enough to deliver a lethal blow regardless.\n\nYet you hesitate. Are you truly ready for what awaits you in the foreign ruins that lie before you?</content>
     <image>adventure</image>
     <choice3Result>4</choice3Result>
     <choice2Result>3</choice2Result>
@@ -8,10 +10,10 @@
     <choice3>I should probably check my supplies once more to be sure I'm ready.</choice3>
     <choice2>No, I was too afraid to go on. Let some other bastard die in a spike pit trap.</choice2>
     <choice1>Yes, I'm ready.</choice1>
-    <content>Your footsteps crunch on the dried leaves that blanket the forest floor. A gust briefly whips the leaves into the air, obscuring your vision. As they settle, you see the trees thin ahead.\n\nYou enter the clearing, clutching your small knife firmly in your hand. The blood running from the wound in your shoulder threatens to loose your grip, but you're confident that your resolve is enough to deliver a lethal blow regardless.\n\nYet you hesitate. Are you truly ready for what awaits you in the foreign ruins that lie before you?</content>
-    <id>1</id>
   </page>
   <page>
+    <id>2</id>
+    <content>You enter the ruins... and die.</content>
     <image>adventure</image>
     <choice3Result>7</choice3Result>
     <choice2Result>6</choice2Result>
@@ -19,11 +21,12 @@
     <choice3>Reincarnate.</choice3>
     <choice2>Die.</choice2>
     <choice1>Die.</choice1>
-    <content>You enter the ruins... and die.</content>
-    <id>2</id>
     <hp>-100</hp>
+    <deathMessage>You enter the ruins... and die. Badly.</deathMessage>
   </page>
   <page>
+    <id>3</id>
+    <content>You turn around and fall into a spike pit. You take 95 points of damage.</content>
     <image>adventure</image>
     <choice3Result>10</choice3Result>
     <choice2Result>9</choice2Result>
@@ -31,19 +34,18 @@
     <choice3>Resign yourself to your fate and bleed out.</choice3>
     <choice2>Cry for help and bleed out.</choice2>
     <choice1>Bleed out.</choice1>
-    <content>You turn around and fall into a spike pit. You take 95 points of damage.</content>
-    <id>3</id>
+    <hp>-95</hp>
+    <deathMessage>How did you die here? You just started and this only did 95 damage.</deathMessage>
   </page>
   <page>
+    <id>4</id>
+    <content>You kneel and remove your backpack from your tired shoulders. Your posessions are few, but you take several minutes to look them over, taking advantage of the reprieve. You find an additional $100 in a small pocket you forget about! Suddenly, you see movement. Did something just dash from the ruins and head East?</content>
     <image>adventure</image>
     <choice3Result>13</choice3Result>
     <choice2Result>12</choice2Result>
     <choice1Result>2</choice1Result>
-    <choice3>I don't want any trouble, I think I'll head West instead.</choice3>
     <choice2>Yes, follow him East!</choice2>
     <choice1>I must have been imagining it... Enter the ruins anyway.</choice1>
-    <content>You kneel and remove your backpack from your tired shoulders. Your posessions are few, but you take several minutes to look them over, taking advantage of the reprieve. Suddenly, you see movement. Did something just dash from the ruins and head East?</content>
-    <id>4</id>
     <cash>100</cash>
   </page>
 </book>

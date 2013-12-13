@@ -13,6 +13,7 @@ public class Page {
 	public String image;
 	public int hp;
 	public int cash;
+	public String deathMessage;
 	
 	public Page()
 	{

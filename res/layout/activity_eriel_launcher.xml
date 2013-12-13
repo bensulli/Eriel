@@ -34,6 +34,7 @@
                 android:layout_alignParentLeft="false"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
+                android:layout_marginBottom="25dp"
                 android:clickable="false"
                 android:contentDescription="Page Image"
                 android:scaleType="centerInside" />
@@ -126,6 +127,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
+            android:clickable="true"
+            android:onClick="Die"
             android:text="HP"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#FFFFFF" />
