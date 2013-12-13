@@ -94,17 +94,19 @@ public class ErielLauncher extends Activity {
 
     public void Choose(View v)
     {	
+    	int destPage;
+    	
     	switch(v.getId()) {
     	case (R.id.choice1Btn):
-    		onPage = pages.get(onPage.choice1Result);
+    		onPage = pages.get(onPage.choice1Result - 1);
     		updatePage(onPage);
     		break;
     	case (R.id.choice2Btn):
-    		onPage = pages.get(onPage.choice2Result);
+    		onPage = pages.get(onPage.choice2Result - 1);
     		updatePage(onPage);	
     		break;
     	case (R.id.choice3Btn):	
-    		onPage = pages.get(onPage.choice1Result);
+    		onPage = pages.get(onPage.choice1Result - 1);
     		updatePage(onPage);
     		break;
     	}
