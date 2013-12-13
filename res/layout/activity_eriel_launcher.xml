@@ -36,8 +36,7 @@
                 android:layout_centerHorizontal="true"
                 android:clickable="false"
                 android:contentDescription="Page Image"
-                android:scaleType="centerInside"
-                android:src="@drawable/const" />
+                android:scaleType="centerInside" />
 
             <TextView
                 android:id="@+id/contentTxt"

@@ -39,10 +39,11 @@ public class ErielLauncher extends Activity {
 	public int cash;
 		
 	/* BOOK TO USE */
-	public static String book = "content.xml"; 
+	public static String book = "content.xml";
 	
 	/* ARRAY OF PAGES */
 	public ArrayList<Page> pages = null;
+	public Page onPage;
 	
 	public static int readLimit = 5000; // Used to kill a loop if it clearly isn't advancing
 	
@@ -55,9 +56,42 @@ public class ErielLauncher extends Activity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //Remove notification bar
 
         setContentView(R.layout.activity_eriel_launcher);
-
-
         
+        Initialize();
+        
+        
+        // ACTUALLY START THE THING!
+        
+        
+        // SET ONPAGE   
+        for(int x = 0; x < pages.size(); x++)
+        {
+        	Log.e(null,"Page ID: " + pages.get(x).id);
+        	if(pages.get(x).id == 1)
+        	{
+        		onPage = pages.get(x);
+        		updatePage(onPage);
+        		break;
+        	}
+        }
+        
+    }
+
+    private void updatePage(Page onPage) {
+		Log.e(null,"Updating layout...");
+    	content.setText(onPage.content);
+		choice1.setText(onPage.choice1);
+		choice2.setText(onPage.choice2);
+		choice3.setText(onPage.choice3);
+		Log.e(null,"Image name is: " + onPage.image);
+		
+		String newImage = onPage.image;
+		int resID = getResources().getIdentifier(newImage, "drawable", getPackageName());
+		pageImage.setImageResource(resID);
+		
+	}
+
+	private void Initialize() {
         /* LINK LAYOUT OBJECTS */
         pageImage = (ImageView)findViewById(R.id.pageImage);
         content = (TextView)findViewById(R.id.contentTxt);
@@ -68,8 +102,8 @@ public class ErielLauncher extends Activity {
         
         /* LINK GAME OBJECTS */
         cashText = (TextView)findViewById(R.id.cashTxt);
-        hp = 80;
-        cash = 10;
+        hp = 100;
+        cash = 15;
         cashText.setText(Integer.toString(cash));
         hpBar.setProgress(hp);
         hpBar.bringToFront();
@@ -83,10 +117,6 @@ public class ErielLauncher extends Activity {
 			e3.printStackTrace();
 			parser = null;
 		}
-        
-        Context context = getApplicationContext();
-     
-        Log.e("debug", "Starting inputstream");
 		
 		InputStream in_s;
 		
@@ -96,16 +126,6 @@ public class ErielLauncher extends Activity {
 			in_s = null;
 			e2.printStackTrace();
 		}
-
-		/* Only used to confirm that the XML was actually readable by the inputstreamer
-		try {
-			String stringXML = IOUtils.toString(in_s, "UTF-8");
-			Log.e(stringXML, stringXML);
-		} catch (IOException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-		*/
         
         try {
         	parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -114,8 +134,7 @@ public class ErielLauncher extends Activity {
 			e1.printStackTrace();
 		}
         
-        Log.e("debug", "Beginning XML parse");
-        
+ 
         try {
 			parseXML(parser);
 		} catch (XmlPullParserException e) {
@@ -125,15 +144,9 @@ public class ErielLauncher extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
-        // ACTUALLY START THE THING!
-        
-        
+	}
 
-                
-    }
-
-    private void parseXML(XmlPullParser parser) throws XmlPullParserException,IOException
+	private void parseXML(XmlPullParser parser) throws XmlPullParserException,IOException
     {
     	
     		int eventType = parser.getEventType();
@@ -146,7 +159,8 @@ public class ErielLauncher extends Activity {
     		String name = null;
     		i++;
     		
-    		Log.e("debug", "EventType is " + eventType);
+    		//Log.e(null, "EventType is " + eventType);
+    		
     		switch (eventType)
     		{
     		case XmlPullParser.START_DOCUMENT:
@@ -160,64 +174,64 @@ public class ErielLauncher extends Activity {
     			}
 
     			    			
-    			String pageString = "page";
-    			
-    			if(name.equals(pageString))
+ 			
+    			if(name.equals("page"))
     			{
+    				Log.e(null,"Found a new page!");
     				currentPage = new Page();
     				//AND THEN PARSE VALUES OF THIS CURRENTPAGE INTO PAGE OBJECT
-    			} else if (name != pageString)
-    			{
-        			//if(name != null)
-           			//Log.e(name, name.);
-    			}
+    			} 
     			
     			else if (currentPage != null)
     				{
-    					if(name == "id")
+    					Log.e(null, "Found something other than a page: " + name);
+    					if(name.equals("id"))
     					{
     						currentPage.id = Integer.parseInt(parser.nextText());
     					}
-    					else if(name == "content")
+    					else if(name.equals("content"))
     					{
     						currentPage.content = parser.nextText();
     					}
-    					else if(name == "choice1")
+    					else if(name.equals("choice1"))
     					{
     						currentPage.choice1 = parser.nextText();
     					}
-    					else if(name == "choice2")
+    					else if(name.equals("choice2"))
     					{
     						currentPage.choice2 = parser.nextText();
     					}
-    					else if(name == "choice3")
+    					else if(name.equals("choice3"))
     					{
     						currentPage.choice3 = parser.nextText();
     					}
-    					else if(name == "choice1Result")
+    					else if(name.equals("choice1Result"))
     					{
     						currentPage.choice1Result = Integer.parseInt(parser.nextText());
     					}
-    					else if(name == "choice2Result")
+    					else if(name.equals("choice2Result"))
     					{
     						currentPage.choice2Result = Integer.parseInt(parser.nextText());
     					}
-    					else if(name == "choice3Result")
+    					else if(name.equals("choice3Result"))
     					{
     						currentPage.choice3Result = Integer.parseInt(parser.nextText());
     					}
-    					else if(name == "image")
+    					else if(name.equals("image"))
     					{
     						currentPage.image = parser.nextText();
     					}
+    					//TODO: Implement health and cash modifiers
     						
     				}
     				break;
     		case XmlPullParser.END_TAG: // If end of file, add current page to list of pages
     			name = parser.getName();
     			if (name.equalsIgnoreCase("page") && currentPage != null)
+    			{
     				pages.add(currentPage);
-    		
+    				Log.e(null,"Page " + pages.size() + " completed, adding to array.");
+    			}
     			}
     		eventType = parser.next();
     		}
