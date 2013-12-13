@@ -38,6 +38,9 @@ public class ErielLauncher extends Activity {
 	public TextView cashText;
 	public int hp; 
 	public int cash;
+	public boolean alive;
+	public static int startingHealth = 100;
+	public static int startingCash = 15;
 		
 	/* BOOK TO USE */
 	public static String book = "content.xml";
@@ -79,34 +82,83 @@ public class ErielLauncher extends Activity {
     }
 
     private void updatePage(Page onPage) { 
-		Log.e(null,"Updating layout...");
+		hp = hp + onPage.hp; // This is "+" because damage is expressed as a negative number in the XML
+    	
+    	Log.e(null,"Updating layout...");
     	content.setText(onPage.content);
 		choice1.setText(onPage.choice1);
 		choice2.setText(onPage.choice2);
-		choice3.setText(onPage.choice3);
+		choice2.setVisibility(View.VISIBLE);
+		
+		if (onPage.choice3 == "")
+		{
+			choice3.setVisibility(View.GONE);
+		}
+		else
+		{
+			choice3.setVisibility(View.VISIBLE);
+			choice3.setText(onPage.choice3);
+		}
+		
 		Log.e(null,"Image name is: " + onPage.image);
 		
 		String newImage = onPage.image;
 		int resID = getResources().getIdentifier(newImage, "drawable", getPackageName());
 		pageImage.setImageResource(resID);
 		
+		if (hp > 0)
+		{
+			hpBar.setProgress(hp);
+		}
+		else if (hp <= 0)
+		{
+			Die();
+		}
+		
 	}
+    
+    public void Die()
+    {
+    	hpBar.setProgress(0);
+    	cashText.setText("0");
+    	String newImage = "epitaph";
+		int resID = getResources().getIdentifier(newImage, "drawable", getPackageName());
+		pageImage.setImageResource(resID);
+		
+		alive = false;
+		
+		choice1.setText("Start over!");		
+		choice2.setVisibility(View.GONE);
+		choice3.setVisibility(View.GONE);
+		
+		
+    }
 
     public void Choose(View v)
     {	
-    	int destPage;
     	
     	switch(v.getId()) {
     	case (R.id.choice1Btn):
-    		onPage = pages.get(onPage.choice1Result - 1);
-    		updatePage(onPage);
+    		
+    		if(alive == true)
+    		{
+    			onPage = pages.get(onPage.choice1Result - 1);
+    			updatePage(onPage);
+    		}
+    		else
+    		{
+    			alive = true;
+    			hp = startingHealth;
+    			onPage = pages.get(0);
+    			updatePage(onPage);
+    		}
     		break;
     	case (R.id.choice2Btn):
     		onPage = pages.get(onPage.choice2Result - 1);
     		updatePage(onPage);	
     		break;
     	case (R.id.choice3Btn):	
-    		onPage = pages.get(onPage.choice1Result - 1);
+    		onPage = pages.get(onPage.choice3Result - 1);
     		updatePage(onPage);
     		break;
     	}
@@ -123,8 +175,8 @@ public class ErielLauncher extends Activity {
         
         /* LINK GAME OBJECTS */
         cashText = (TextView)findViewById(R.id.cashTxt);
-        hp = 100;
-        cash = 15;
+        hp = startingHealth;
+        cash = startingCash;
         cashText.setText(Integer.toString(cash));
         hpBar.setProgress(hp);
         hpBar.bringToFront();
@@ -241,6 +293,14 @@ public class ErielLauncher extends Activity {
     					else if(name.equals("image"))
     					{
     						currentPage.image = parser.nextText();
+    					}
+    					else if(name.equals("hp"))
+    					{
+    						currentPage.hp = Integer.parseInt(parser.nextText());
+    					}
+    					else if(name.equals("cash"))
+    					{
+    						currentPage.cash = Integer.parseInt(parser.nextText());
     					}
     					//TODO: Implement health and cash modifiers
     						
