@@ -9,6 +9,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import ca.sulli.eriel.R.color;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
@@ -25,6 +26,9 @@ import android.widget.TextView;
 
 public class ErielLauncher extends Activity {
 
+	/* FOR DEBUGGING */
+	public static final boolean DEV_MODE = true; // Determines whether debugging info is shown in app. Disable before release :)
+	
 	/* INST CONTENT OBJECTS */
 	public int pageNum;
 	public ImageView pageImage;
@@ -33,15 +37,19 @@ public class ErielLauncher extends Activity {
 	public Button choice2;
 	public Button choice3;
 	public ProgressBar hpBar;
+	public TextView errorText;
 	
 	/* INST GAME OBJECTS */
 	public TextView cashText;
 	public int hp; 
 	public int cash;
-	public boolean alive;
+	public boolean alive = true;
 	public static int startingHealth = 100;
 	public static int startingCash = 15;
-		
+	
+	/* XML ERROR LOG */
+	public String errorLog = "";
+	
 	/* BOOK TO USE */
 	public static String book = "content.xml";
 	
@@ -74,14 +82,14 @@ public class ErielLauncher extends Activity {
         	if(pages.get(x).id == 1)
         	{
         		onPage = pages.get(x);
-        		updatePage(onPage);
+        		UpdatePage(onPage);
         		break;
         	}
         }
         
     }
 
-    private void updatePage(Page onPage) { 
+    private void UpdatePage(Page onPage) { 
 		hp = hp + onPage.hp; // This is "+" because damage is expressed as a negative number in the XML
 		if (hp > 0)
 		{
@@ -92,16 +100,22 @@ public class ErielLauncher extends Activity {
 	    	Log.e(null,"Updating layout...");
 	    	String contentString = onPage.content;
 	    	
-	    	/*
-	    	if(contentString.contains("\\n"))
-	    	{
-	    		contentString.replace("\\n", System.getProperty("line.separator"));
-	    	}
-	    	*/
-	    	
 	    	content.setText(contentString);
-			choice1.setText(onPage.choice1);
-			choice2.setText(onPage.choice2);
+
+	    	if (CheckRequirements(onPage.choice1Result) == false) {
+	    		choice1.setTextColor(color.disabled_text);
+	    		choice1.setClickable(false);
+	    	}
+	    	
+	    	choice1.setText(onPage.choice1);
+			
+	    	if (CheckRequirements(onPage.choice2Result) == false) {
+    			choice2.setTextColor(color.disabled_text);
+    			choice2.setClickable(false);
+	    	}
+	    				
+	    	choice2.setText(onPage.choice2);
+				
 			choice2.setVisibility(View.VISIBLE);
 			
 			if (onPage.choice3 == null)
@@ -109,8 +123,14 @@ public class ErielLauncher extends Activity {
 				choice3.setVisibility(View.GONE);
 			}
 			else
-			{
+			{	
 				choice3.setVisibility(View.VISIBLE);
+				
+				if (CheckRequirements(onPage.choice3Result) == false) {
+	    			choice3.setTextColor(color.disabled_text);
+	    			choice3.setClickable(false);
+				}
+		    				
 				choice3.setText(onPage.choice3);
 			}
 			
@@ -119,6 +139,9 @@ public class ErielLauncher extends Activity {
 			String newImage = onPage.image;
 			int resID = getResources().getIdentifier(newImage, "drawable", getPackageName());
 			pageImage.setImageResource(resID);
+			
+			
+			
 		}
 		else if (hp <= 0)
 		{
@@ -127,7 +150,41 @@ public class ErielLauncher extends Activity {
 		
 	}
     
-    public void Die()
+    private boolean CheckRequirements(int choice) {
+		
+    	int requiredCash = 0;
+    	
+    	try
+    	{
+    		Page destPage = pages.get(choice - 1);
+        	requiredCash = destPage.cash; 
+    	}
+    	catch(Exception e)
+    	{
+    		UpdateErrors("ERROR: Choice destination \'" + choice + "\' doesn't exist in XML!");
+    		return false;
+    	}
+    	
+
+    	
+    	if (requiredCash < 0)
+    	{
+    		requiredCash = requiredCash * -1; // Inverted since negative numbers are used in the XML for cost
+    	}
+    	else
+    		requiredCash = 0;
+    	
+    	if (requiredCash >= cash)
+    	{
+    		return false;
+    	}
+    	else
+    	{
+    		return true;
+    	}
+	}
+
+	public void Die()
     {
     	hpBar.setProgress(0);
     	cashText.setText("0");
@@ -155,23 +212,23 @@ public class ErielLauncher extends Activity {
     		if(alive == true)
     		{
     			onPage = pages.get(onPage.choice1Result - 1);
-    			updatePage(onPage);
+    			UpdatePage(onPage);
     		}
     		else
     		{
     			alive = true;
     			hp = startingHealth;
     			onPage = pages.get(0);
-    			updatePage(onPage);
+    			UpdatePage(onPage);
     		}
     		break;
     	case (R.id.choice2Btn):
     		onPage = pages.get(onPage.choice2Result - 1);
-    		updatePage(onPage);	
+    		UpdatePage(onPage);	
     		break;
     	case (R.id.choice3Btn):	
     		onPage = pages.get(onPage.choice3Result - 1);
-    		updatePage(onPage);
+    		UpdatePage(onPage);
     		break;
     	}
     }
@@ -184,6 +241,8 @@ public class ErielLauncher extends Activity {
         choice2 = (Button)findViewById(R.id.choice2Btn);
         choice3 = (Button)findViewById(R.id.choice3Btn);
         hpBar = (ProgressBar)findViewById(R.id.healthBar);
+        errorText = (TextView)findViewById(R.id.errorText);
+        errorText.setTextColor(color.error);
         
         /* LINK GAME OBJECTS */
         cashText = (TextView)findViewById(R.id.cashTxt);
@@ -221,7 +280,7 @@ public class ErielLauncher extends Activity {
         
  
         try {
-			parseXML(parser);
+			ParseXML(parser);
 		} catch (XmlPullParserException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -231,7 +290,17 @@ public class ErielLauncher extends Activity {
 		}
 	}
 
-	private void parseXML(XmlPullParser parser) throws XmlPullParserException,IOException
+	private void UpdateErrors(String newError)
+	{
+		errorLog = errorLog.concat("\n" + newError);
+		if(DEV_MODE)
+		{
+			errorText.setText(errorLog);
+		}
+		
+	}
+	
+	private void ParseXML(XmlPullParser parser) throws XmlPullParserException,IOException
     {
     	
     		int eventType = parser.getEventType();
