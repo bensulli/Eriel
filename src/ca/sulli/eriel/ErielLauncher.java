@@ -3,6 +3,9 @@ package ca.sulli.eriel;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.xmlpull.v1.XmlPullParser;
@@ -13,6 +16,7 @@ import ca.sulli.eriel.R.color;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.util.Log;
 import android.util.Xml;
 import android.view.Menu;
@@ -27,7 +31,7 @@ import android.widget.TextView;
 public class ErielLauncher extends Activity {
 
 	/* FOR DEBUGGING */
-	public static final boolean DEV_MODE = true; // Determines whether debugging info is shown in app. Disable before release :)
+	public static boolean DEV_MODE = false; // Defaults to false, but this is actually set in onCreate
 	
 	/* INST CONTENT OBJECTS */
 	public int pageNum;
@@ -69,11 +73,13 @@ public class ErielLauncher extends Activity {
 
         setContentView(R.layout.activity_eriel_launcher);
         
-        Initialize();
+        if((getApplicationContext().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
+        	DEV_MODE = true; // Set DEV MODE if package is not signed (eg, not in the market)
         
+        Initialize(); // Initial gruntwork
         
-        // ACTUALLY START THE THING!
-        
+        if(ValidateIDs()) // Ensure there are no duplicate page IDs
+        	UpdateErrors("CRITICAL: IDs and/or Destinations did not validate! See above for info.");
         
         // SET ONPAGE   
         for(int x = 0; x < pages.size(); x++)
@@ -89,7 +95,42 @@ public class ErielLauncher extends Activity {
         
     }
 
-    private void UpdatePage(Page onPage) { 
+    private boolean ValidateIDs() {
+    	
+    	Set<Integer> ids = new HashSet();   	
+    	Set<Integer> dests = new HashSet();
+    	boolean valid = true;
+    	
+    	for(int x = 0; x < pages.size(); x++)
+         {
+    		if (!ids.add(pages.get(x).id))
+    		{
+    			UpdateErrors("ERROR: Duplicate Page ID found - " + x);
+    			valid = false;
+    		}
+    		
+    		dests.add(pages.get(x).choice1Result);
+    		dests.add(pages.get(x).choice2Result);
+    		dests.add(pages.get(x).choice3Result);
+         }
+    	
+    	for(int y = 1; y < dests.size(); y++)
+    	{
+    		if(!ids.contains(y))
+    		{
+    			valid = false;
+    			UpdateErrors("ERROR: Destination " + y + " doesn't exist.");
+    		}
+    	}
+    	
+    	return valid;
+    	
+    	
+    	
+		
+	}
+
+	private void UpdatePage(Page onPage) { 
 		hp = hp + onPage.hp; // This is "+" because damage is expressed as a negative number in the XML
 		if (hp > 0)
 		{
@@ -134,9 +175,11 @@ public class ErielLauncher extends Activity {
 				choice3.setText(onPage.choice3);
 			}
 			
-			Log.e(null,"Image name is: " + onPage.image);
+			
 			
 			String newImage = onPage.image;
+			
+			
 			int resID = getResources().getIdentifier(newImage, "drawable", getPackageName());
 			pageImage.setImageResource(resID);
 			
@@ -326,8 +369,6 @@ public class ErielLauncher extends Activity {
     				parser.next();
     				name = parser.getName();
     			}
-
-    			    			
  			
     			if(name.equals("page"))
     			{
@@ -341,7 +382,15 @@ public class ErielLauncher extends Activity {
     					Log.e(null, "Found something other than a page: " + name);
     					if(name.equals("id"))
     					{
-    						currentPage.id = Integer.parseInt(parser.nextText());
+    						try
+    						{
+    							currentPage.id = Integer.parseInt(parser.nextText());
+    						}
+    						catch(Exception e)
+    						{
+    							currentPage.id = 0;
+    							UpdateErrors("ERROR: Invalid page id!");
+    						}
     					}
     					else if(name.equals("content"))
     					{
@@ -361,27 +410,76 @@ public class ErielLauncher extends Activity {
     					}
     					else if(name.equals("choice1Result"))
     					{
-    						currentPage.choice1Result = Integer.parseInt(parser.nextText());
+    						try
+    						{
+    							currentPage.choice1Result = Integer.parseInt(parser.nextText());
+    						}
+    						catch(Exception e)
+    						{
+    							UpdateErrors("ERROR: Invalid choice result for: Page " + currentPage.id + " choice1Result");
+    							currentPage.choice1Result = 0;
+    						}
     					}
     					else if(name.equals("choice2Result"))
     					{
-    						currentPage.choice2Result = Integer.parseInt(parser.nextText());
+    						try
+    						{
+    							currentPage.choice2Result = Integer.parseInt(parser.nextText());
+    						}
+    						catch(Exception e)
+    						{
+    							UpdateErrors("ERROR: Invalid choice result for: Page " + currentPage.id + " choice2Result");
+    							currentPage.choice2Result = 0;
+    						}
     					}
     					else if(name.equals("choice3Result"))
     					{
-    						currentPage.choice3Result = Integer.parseInt(parser.nextText());
+    						try
+    						{
+    							currentPage.choice3Result = Integer.parseInt(parser.nextText());
+    						}
+    						catch(Exception e)
+    						{
+    							UpdateErrors("ERROR: Invalid choice result for: Page " + currentPage.id + " choice3Result");
+    							currentPage.choice3Result = 0;
+    						}
     					}
     					else if(name.equals("image"))
     					{
     						currentPage.image = parser.nextText();
+    						if(currentPage.image == "")
+    							UpdateErrors("INFO: Image for page " + currentPage.id + " is empty. You should add an image or remove the image attribute from the page");
+    						
+    						String newImage = currentPage.image; 						
+    						int resID = getResources().getIdentifier(newImage, "drawable", getPackageName());
+    						
+    						if(resID == 0)
+    							UpdateErrors("WARNING: Image specified doesn't exist in the /drawable folder - " + currentPage.image + ".png");
+    						
     					}
     					else if(name.equals("hp"))
     					{
-    						currentPage.hp = Integer.parseInt(parser.nextText());
+    						try
+    						{
+    							currentPage.hp = Integer.parseInt(parser.nextText());
+    						}
+    						catch (Exception e)
+    						{
+    							UpdateErrors("ERROR: Invalid HP value for: Page " + currentPage.id);
+    							currentPage.hp = 0;
+    						}
     					}
     					else if(name.equals("cash"))
     					{
-    						currentPage.cash = Integer.parseInt(parser.nextText());
+    						try
+    						{
+    							currentPage.cash = Integer.parseInt(parser.nextText());
+    						}
+    						catch (Exception e)
+    						{
+    							UpdateErrors("ERROR: Invalid Cash value for: Page " + currentPage.id);
+    							currentPage.cash = 0;
+    						}
     					}
     					else if(name.equals("deathMessage"))
     					{
@@ -400,6 +498,7 @@ public class ErielLauncher extends Activity {
     			}
     		eventType = parser.next();
     		}
+    	UpdateErrors("INFO: " + book + " imported with " + pages.size() + " pages.");
     		
     	}
     

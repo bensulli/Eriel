@@ -21,7 +21,6 @@ Yet you hesitate. Are you truly ready for what awaits you in the foreign ruins t
   <page>
     <id>2</id>
     <content>You enter the ruins... and die.</content>
-    <image>adventure</image>
     <choice3Result>7</choice3Result>
     <choice2Result>6</choice2Result>
     <choice1Result>5</choice1Result>
