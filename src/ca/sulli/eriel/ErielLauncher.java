@@ -1,5 +1,7 @@
 package ca.sulli.eriel;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import ca.sulli.eriel.R.color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -27,6 +30,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ErielLauncher extends Activity {
 
@@ -56,6 +60,8 @@ public class ErielLauncher extends Activity {
 	
 	/* BOOK TO USE */
 	public static String book = "content.xml";
+	public static String bookURI;
+	public static boolean bookExists;
 	
 	/* ARRAY OF PAGES */
 	public ArrayList<Page> pages = null;
@@ -76,21 +82,43 @@ public class ErielLauncher extends Activity {
         if((getApplicationContext().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
         	DEV_MODE = true; // Set DEV MODE if package is not signed (eg, not in the market)
         
+        File sdCard = Environment.getExternalStorageDirectory();
+        File directory = new File(sdCard.getAbsolutePath() + "/Quilxotic");
+        
+        if(!directory.exists())
+        	directory.mkdir();
+       
+        File bookFile = new File(directory, book);
+        bookURI = bookFile.getAbsolutePath();
+        
+		if(!bookFile.exists())
+        {
+        	bookExists = false;
+        	
+        }
+        else if (bookFile.exists())
+        {
+        	bookExists = true;
+        }
+        
         Initialize(); // Initial gruntwork
         
-        if(ValidateIDs()) // Ensure there are no duplicate page IDs
-        	UpdateErrors("CRITICAL: IDs and/or Destinations did not validate! See above for info.");
-        
-        // SET ONPAGE   
-        for(int x = 0; x < pages.size(); x++)
+        if(bookExists)
         {
-        	Log.e(null,"Page ID: " + pages.get(x).id);
-        	if(pages.get(x).id == 1)
-        	{
-        		onPage = pages.get(x);
-        		UpdatePage(onPage);
-        		break;
-        	}
+	        if(ValidateIDs()) // Ensure there are no duplicate page IDs
+	        	UpdateErrors("CRITICAL: IDs and/or Destinations did not validate! See above for info.");
+	        
+	        // SET ONPAGE   
+	        for(int x = 0; x < pages.size(); x++)
+	        {
+	        	Log.e(null,"Page ID: " + pages.get(x).id);
+	        	if(pages.get(x).id == 1)
+	        	{
+	        		onPage = pages.get(x);
+	        		UpdatePage(onPage);
+	        		break;
+	        	}
+	        }
         }
         
     }
@@ -285,7 +313,6 @@ public class ErielLauncher extends Activity {
         choice3 = (Button)findViewById(R.id.choice3Btn);
         hpBar = (ProgressBar)findViewById(R.id.healthBar);
         errorText = (TextView)findViewById(R.id.errorText);
-        errorText.setTextColor(color.error);
         
         /* LINK GAME OBJECTS */
         cashText = (TextView)findViewById(R.id.cashTxt);
@@ -295,42 +322,49 @@ public class ErielLauncher extends Activity {
         hpBar.setProgress(hp);
         hpBar.bringToFront();
         
-        /* READ XML BOOK */
-        XmlPullParser parser;
-		try {
-			parser = XmlPullParserFactory.newInstance().newPullParser();
-		} catch (XmlPullParserException e3) {
-			// TODO Auto-generated catch block
-			e3.printStackTrace();
-			parser = null;
-		}
-		
-		InputStream in_s;
-		
-		try {
-			in_s = getApplicationContext().getAssets().open(book);
-		} catch (IOException e2) {
-			in_s = null;
-			e2.printStackTrace();
-		}
         
-        try {
-        	parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-        	parser.setInput(in_s, null);
-		} catch (XmlPullParserException e1) {
-			e1.printStackTrace();
-		}
-        
- 
-        try {
-			ParseXML(parser);
-		} catch (XmlPullParserException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        if(bookExists)
+        {
+	        /* READ XML BOOK */
+	        XmlPullParser parser;
+			try {
+				parser = XmlPullParserFactory.newInstance().newPullParser();
+			} catch (XmlPullParserException e3) {
+				// TODO Auto-generated catch block
+				e3.printStackTrace();
+				parser = null;
+			}
+			
+			FileInputStream in_s;
+			
+			try {
+				in_s = new FileInputStream(bookURI);
+			} catch (IOException e2) {
+				in_s = null;
+				e2.printStackTrace();
+			}
+	        
+	        try {
+	        	parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+	        	parser.setInput(in_s, null);
+			} catch (XmlPullParserException e1) {
+				e1.printStackTrace();
+			}
+	        
+	 
+	        try {
+				ParseXML(parser);
+			} catch (XmlPullParserException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        } else if (!bookExists)
+        {
+        	UpdateErrors("No content.xml book found. Add it in the /Quilxotic directory that's already been created by running this app.");
+        }
 	}
 
 	private void UpdateErrors(String newError)

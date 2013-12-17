@@ -33,7 +33,7 @@ Yet you hesitate. Are you truly ready for what awaits you in the foreign ruins t
   <page>
     <id>3</id>
     <content>
-You turn around and fall into a spike pit. You take 95 points of damage. This costs you $10.</content>
+You turn around and fall into a spike pit. You take 95 points of damage.</content>
     <image>adventure</image>
     <choice3Result>10</choice3Result>
     <choice2Result>9</choice2Result>
@@ -43,7 +43,6 @@ You turn around and fall into a spike pit. You take 95 points of damage. This co
     <choice1>Bleed out.</choice1>
     <hp>-95</hp>
     <deathMessage>How did you die here? You just started and this only did 95 damage.</deathMessage>
-    <cash>-10</cash>
   </page>
   <page>
     <id>4</id>
